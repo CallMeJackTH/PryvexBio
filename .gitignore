@@ -1,0 +1,14 @@
+# Ignore local env files containing secrets
+.env
+.env.local
+.env.*.local
+
+# Node modules and logs
+node_modules/
+npm-debug.log*
+
+# Vercel output
+.vercel
+
+# macOS
+.DS_Store

@@ -1,1 +1,8 @@
-{"name":"pryvex-bio","private":true}
+{
+  "name": "pryvex-bio",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev"
+  }
+}
