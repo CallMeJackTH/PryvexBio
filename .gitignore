@@ -1,0 +1,30 @@
+Secrets and environment variables
+
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+Dependencies
+
+node_modules/
+
+Vercel
+
+.vercel/
+
+Build output
+
+dist/
+build/
+
+Logs
+
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+OS files
+
+.DS_Store
+Thumbs.db
