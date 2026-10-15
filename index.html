@@ -85,6 +85,44 @@ input[type=color]{width:100%;height:38px;border:1px solid var(--ui-line);border-
 .ava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 input[type=password]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--ui-line);background:var(--ui-in);color:var(--ui-fg);font:14px 'Prompt',sans-serif}
 .lg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(340px,90%);background:var(--ui-bg);color:var(--ui-fg);padding:22px;border-radius:20px;display:grid;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+
+
+/* QR-only responsive support for wide images such as 1405 x 600 px. */
+.donate .donate-methods {
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 100%;
+}
+.donate .donate-method {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.donate .donate-method .qrbox {
+  width: 100%;
+  min-height: 0;
+  height: auto;
+  padding: 8px;
+  box-sizing: border-box;
+  overflow: visible;
+}
+.donate .donate-method .qrbox img,
+.donate .qrbox img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+@media (max-width: 639px) {
+  .donate .donate-methods { grid-template-columns: minmax(0, 1fr) !important; }
+  .donate .donate-method .qrbox { padding: 4px; }
+  .donate .donate-method .qrbox img,
+  .donate .qrbox img { width: 100%; max-width: 100%; max-height: none; height: auto; }
+}
+
 </style>
 </head>
 <body>
