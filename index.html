@@ -44,6 +44,17 @@ h1{margin:0;font-size:clamp(34px,8vw,76px);font-weight:800;line-height:1.05;back
 .info p{margin:0;font-size:clamp(13px,1.8vw,16px);opacity:.85}
 .go{flex:none;padding:12px 20px;border-radius:999px;background:#fff;color:#111;font-weight:600;font-size:14px}
 .empty{text-align:center;opacity:.8;padding:40px 0}
+.donate{width:min(100%,920px);margin:0 auto;border:1px solid rgba(255,255,255,.18);border-radius:var(--r);padding:clamp(20px,4vw,36px);background:linear-gradient(135deg,rgba(139,123,255,.22),rgba(52,224,196,.10));backdrop-filter:blur(14px);box-shadow:0 24px 60px rgba(0,0,0,.32);display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,280px);gap:24px;align-items:center}
+.donate h2{margin:0 0 8px;font-size:clamp(24px,4vw,34px);font-weight:800}
+.donate p{margin:0 0 14px;color:rgba(255,255,255,.82);font-size:14px;line-height:1.7}
+.donate .wallet{display:inline-flex;margin:0 0 14px;padding:7px 12px;border:1px solid rgba(255,255,255,.22);background:rgba(0,0,0,.25);border-radius:999px;font-size:13px}
+.donate .qrbox{min-height:220px;display:grid;place-items:center;background:#fff;border-radius:20px;padding:12px;overflow:hidden}
+.donate .qrbox img{display:block;width:100%;max-width:260px;max-height:300px;object-fit:contain;border-radius:10px}
+.donate .qrplaceholder{color:#555;text-align:center;font-size:13px;padding:24px}
+.donate .donatebtn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:0;border-radius:999px;padding:12px 18px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#101322;font:600 14px 'Prompt',sans-serif;cursor:pointer}
+.donate{grid-template-columns:1fr}.donate-head{max-width:720px}.donate-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin-top:18px}.donate-method{border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:16px;background:rgba(0,0,0,.22);display:grid;gap:10px;align-content:start}.donate-method h3{margin:0;font-size:18px}.donate-method .qrbox{min-height:190px}.donate-method .qrbox img{max-width:240px}.donate-method .method-meta{font-size:13px;opacity:.85;overflow-wrap:anywhere}
+.method-admin-card{position:relative}.method-admin-card[draggable="true"]{cursor:grab}.method-admin-card.dragging{opacity:.45;outline:2px dashed var(--ac)}.method-admin-card.drag-over{outline:2px solid var(--ac);transform:translateY(1px)}.drag-handle{display:flex;align-items:center;gap:8px;color:var(--ui-mut);font-size:12px;cursor:grab;user-select:none}.drag-handle .grip{font-size:20px;letter-spacing:-4px;color:var(--ac)}
+@media(max-width:639px){.donate{grid-template-columns:1fr}.donate .qrbox{min-height:190px}.donate .qrbox img{max-width:230px}}
 @media (max-width:1023px){.panel{width:min(100%,720px);height:420px}}
 @media (max-width:639px){.panel{height:min(112vw,440px);--r:22px}.info{flex-direction:column;align-items:flex-start}.hero{min-height:70vh}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}.pimg,#bgl{transform:none!important}}
@@ -74,14 +85,6 @@ input[type=color]{width:100%;height:38px;border:1px solid var(--ui-line);border-
 .ava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 input[type=password]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--ui-line);background:var(--ui-in);color:var(--ui-fg);font:14px 'Prompt',sans-serif}
 .lg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(340px,90%);background:var(--ui-bg);color:var(--ui-fg);padding:22px;border-radius:20px;display:grid;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
-
-.donate-wrap{width:min(100%,920px);margin:0 auto;padding:0 0 30px;color:#fff}
-.donate-card{border:1px solid rgba(255,255,255,.18);background:rgba(15,18,35,.78);backdrop-filter:blur(14px);border-radius:24px;padding:clamp(18px,4vw,30px);box-shadow:0 20px 55px rgba(0,0,0,.28)}
-.donate-head{text-align:center;margin-bottom:20px}.donate-head h2{margin:0 0 6px;font-size:clamp(24px,5vw,36px)}.donate-head p{margin:0;opacity:.75;font-size:14px}
-.donate-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px}
-.donate-item{min-width:0;text-align:center;padding:16px;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(255,255,255,.06)}
-.donate-item h3{margin:0 0 5px;font-size:18px}.donate-item p{margin:4px 0;color:rgba(255,255,255,.8);font-size:14px;overflow-wrap:anywhere}
-.donate-qr{display:block;width:min(100%,240px);aspect-ratio:1;object-fit:contain;background:#fff;border-radius:14px;padding:8px;margin:12px auto}.donate-empty{opacity:.7;text-align:center;padding:20px}.donate-copy{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;border-radius:10px;padding:8px 12px;font:inherit;cursor:pointer;margin-top:6px}.donate-copy:focus-visible{outline:2px solid #c4b5fd;outline-offset:3px}
 </style>
 </head>
 <body>
@@ -90,16 +93,23 @@ input[type=password]{width:100%;padding:10px 12px;border-radius:10px;border:1px 
 <div id="adm"></div>
 <div class="toast" id="toast"></div>
 <script>
+// Pryvex Bio single-file site. Supabase browser access uses a public publishable/anon key only. Never place a Supabase Secret Key in browser HTML. Any ImgBB key in this file is publicly visible.
 const $=id=>document.getElementById(id);
 const h=(t,a={},...k)=>{const e=document.createElement(t);for(const x in a){if(x==='class')e.className=a[x];else if(x.slice(0,2)==='on')e.addEventListener(x.slice(2),a[x]);else e.setAttribute(x,a[x])}k.flat().forEach(c=>e.append(c));return e};
-let S={name:'JACK_007',bio:'ช่องของ JACK_007 · รวมลิงก์ทั้งหมดไว้ที่เดียว',avatar:'https://i.ibb.co/cSkN3GZ7/favicon.png',bg:{c1:'#0b1020',c2:'#4a1d8f',img:''},links:[{id:'l1',title:'YouTube',url:'https://youtube.com',desc:'ติดตามคลิปใหม่ล่าสุด',img:''}],donate:[]};
-const TK='pvx_t';
-const getT=()=>{try{const t=localStorage.getItem(TK)||'';return Number(t.split('.')[0])>Date.now()?t:''}catch(e){return ''}};
-const setT=t=>{try{t?localStorage.setItem(TK,t):localStorage.removeItem(TK)}catch(e){}};
+let S={name:'JACK_007',bio:'ช่องของ JACK_007 · รวมลิงก์ทั้งหมดไว้ที่เดียว',avatar:'https://i.ibb.co/cSkN3GZ7/favicon.png',bg:{c1:'#0b1020',c2:'#4a1d8f',img:''},links:[{id:'l1',title:'YouTube',url:'https://youtube.com',desc:'ติดตามคลิปใหม่ล่าสุด',img:''}],donate:{enabled:true,title:'สนับสนุน Pryvex Bio',desc:'หากเว็บไซต์นี้มีประโยชน์ สามารถสนับสนุนค่าใช้จ่ายในการพัฒนาได้ ขอบคุณมากครับ',wallet:'0801569915',qrUrl:'',paymentLink:'',methods:[]}};
+const TK='pvx_admin_session';
+const ADMIN_PASSWORD='Pryvex-Demo-2026'; // Temporary hardcoded password: replace with server-side authentication before production.
+const SUPABASE_URL='https://bfoqxsjlucmjvepbiycm.supabase.co';
+// Paste your Supabase publishable key (sb_publishable_...) or legacy anon key here. Do NOT use sb_secret_ here.
+const SUPABASE_PUBLIC_KEY='sb_publishable_dRiNAwktfCr9tLCaIIbC-A_MUdMmMnL';
+const SUPABASE_TABLE='pryvex_site';
+const IMGBB_API_KEY='b340d221b9ab90550fb3b61071073b05';
+const getT=()=>{try{return sessionStorage.getItem(TK)==='ok'?'ok':''}catch(e){return ''}};
+const setT=t=>{try{t?sessionStorage.setItem(TK,'ok'):sessionStorage.removeItem(TK)}catch(e){}};
+try{const saved=localStorage.getItem('pryvex_bio_data');if(saved){const d=JSON.parse(saved);if(d&&Array.isArray(d.links))S={...S,...d,bg:{...S.bg,...(d.bg||{})},donate:{...S.donate,...(d.donate||{}),methods:(Array.isArray(d.donate?.methods)?d.donate.methods:((d.donate?.qrUrl)?[{id:'legacy-qr',bankName:'ช่องทางรับเงิน',accountName:d.donate?.wallet||'',qrUrl:d.donate.qrUrl,enabled:true}]:[])).map((m,i)=>({id:m.id||('pay'+i),enabled:m.enabled!==false,bankName:m.bankName||'',accountName:m.accountName||'',accountNumber:m.accountNumber||'',qrUrl:m.qrUrl||'',infoImageUrl:m.infoImageUrl||'',note:m.note||''}))}}}}catch(e){}
 const safe=u=>/^(https?:|mailto:|tel:)/i.test(u)?u:'https://'+u;
 const imgOk=u=>/^https:\/\/[^\s"')]+$/i.test(u||'');
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2600)}
-async function api(p,o={}){const t=getT();const r=await fetch(p,{...o,headers:{...(o.headers||{}),...(t?{Authorization:'Bearer '+t}:{})}});if(r.status===401&&t)setT('');return r}
 const adminOpen=()=>getT()?openEd():openLogin();
 function renderSite(){
   const b=S.bg;$('bgl').style.background=imgOk(b.img)?`url("${b.img}") center/cover`:`linear-gradient(160deg,${b.c1},${b.c2})`;
@@ -121,20 +131,23 @@ function renderSite(){
     st.append(p);
   });
   r.append(st);
-  const donations=Array.isArray(S.donate)?S.donate:[];
-  const dw=h('section',{class:'donate-wrap'},h('div',{class:'donate-card'},h('div',{class:'donate-head'},h('h2',{},'💜 สนับสนุนเรา'),h('p',{},'ขอบคุณที่ช่วยสนับสนุน Pryvex')),
-    donations.length?h('div',{class:'donate-list'},donations.map(d=>{
-      const bank=d.bank||d.title||'ช่องทางบริจาค';
-      const holder=d.account||'';
-      const number=d.number||'';
-      const item=h('article',{class:'donate-item'},h('h3',{},bank));
-      if(holder)item.append(h('p',{},'ชื่อบัญชี: '+holder));
-      if(number){item.append(h('p',{},'เลขบัญชี / พร้อมเพย์: '+number));item.append(h('button',{class:'donate-copy',type:'button',onclick:async()=>{try{await navigator.clipboard.writeText(number);toast('คัดลอกเลขบัญชีแล้ว')}catch(e){const ta=h('textarea',{readonly:'readonly',style:'position:fixed;opacity:0'});ta.value=number;document.body.append(ta);ta.select();const ok=document.execCommand('copy');ta.remove();toast(ok?'คัดลอกเลขบัญชีแล้ว':'คัดลอกไม่สำเร็จ')}}},'คัดลอกเลขบัญชี'));}
-      if(imgOk(d.qr))item.append(h('img',{class:'donate-qr',src:d.qr,alt:'QR Code สำหรับโอนเงิน',loading:'lazy'}));
-      if(d.note)item.append(h('p',{},d.note));
-      return item;
-    })):h('div',{class:'donate-empty'},'ยังไม่ได้ตั้งค่าช่องทางบริจาค')));
-  r.append(dw);tick();
+  const dn=S.donate||{};
+  if(dn.enabled!==false){
+    const methods=Array.isArray(dn.methods)?dn.methods:[];
+    const head=h('div',{class:'donate-head'},h('div',{class:'brand'},h('span',{class:'dot'}),'DONATE'),h('h2',{},dn.title||'สนับสนุน Pryvex Bio'),h('p',{},dn.desc||'ขอบคุณที่สนับสนุนเว็บไซต์นี้'),dn.wallet?h('div',{class:'wallet'},'หมายเลขรับเงิน: '+dn.wallet):'',dn.paymentLink&&imgOk(dn.paymentLink)?h('a',{class:'donatebtn',href:dn.paymentLink,target:'_blank',rel:'noopener noreferrer'},'เปิดลิงก์รับเงิน ↗'):'',h('p',{},'เลือกช่องทางด้านล่าง แล้วตรวจสอบชื่อผู้รับก่อนยืนยันการชำระเงิน'));
+    const cards=h('div',{class:'donate-methods'});
+    methods.filter(m=>m&&m.enabled!==false&&((m.bankName||'').trim()||imgOk(m.qrUrl))).forEach(m=>{
+      const qr=h('div',{class:'qrbox'});
+      if(imgOk(m.qrUrl)){const qi=h('img',{src:m.qrUrl,alt:'QR Code '+(m.bankName||'รับเงิน'),loading:'lazy'});qi.onerror=()=>{qr.textContent='เปิดรูป QR ไม่ได้ กรุณาแจ้งเจ้าของเว็บไซต์'};qr.append(qi)}else qr.append(h('div',{class:'qrplaceholder'},'ยังไม่มีรูป QR Code'));
+      cards.append(h('article',{class:'donate-method'},h('h3',{},m.bankName||'ช่องทางรับเงิน'),m.accountName?h('div',{class:'method-meta'},'ชื่อบัญชี: '+m.accountName):'',m.accountNumber?h('div',{class:'method-meta'},'เลขบัญชี: '+m.accountNumber):'',m.note?h('div',{class:'method-meta'},m.note):'',qr,m.infoImageUrl&&imgOk(m.infoImageUrl)?h('img',{src:m.infoImageUrl,alt:'ข้อมูลเพิ่มเติม '+(m.bankName||''),loading:'lazy',style:'display:block;width:100%;max-width:240px;max-height:300px;object-fit:contain;border-radius:10px;margin:auto'}):''));
+    });
+    if(!methods.length && imgOk(dn.qrUrl)){
+      const qr=h('div',{class:'qrbox'});const qi=h('img',{src:dn.qrUrl,alt:'QR Code สำหรับโดเนท',loading:'lazy'});qr.append(qi);cards.append(h('article',{class:'donate-method'},h('h3',{},'ช่องทางรับเงิน'),qr));
+    }
+    if(!cards.childElementCount)cards.append(h('div',{class:'donate-method'},h('div',{class:'qrplaceholder'},'เจ้าของเว็บยังไม่ได้เพิ่มธนาคารหรือรูป QR Code')));
+    st.append(h('section',{class:'donate',id:'donate'},head,cards));
+  }
+  tick();
 }
 let raf=0;
 function tick(){cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{
@@ -143,12 +156,40 @@ function tick(){cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{
     p.firstChild.style.transform=`translate3d(0,${(q.top+q.height/2-vh/2)*-.14}px,0)`})})}
 addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);
 function shrink(f,m=1600){return new Promise((ok,no)=>{const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{const k=Math.min(1,m/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>b?ok(b):no(),'image/jpeg',.85)};i.onerror=no;i.src=u})}
-async function upload(file,cb){if(!file)return;try{toast('กำลังอัปโหลด…');const b=await shrink(file);const r=await api('/api/upload',{method:'POST',headers:{'Content-Type':'image/jpeg'},body:b});if(!r.ok)throw 0;cb((await r.json()).url);renderSite();openEd();toast('อัปโหลดแล้ว — อย่าลืมกดบันทึก')}catch(e){toast('อัปโหลดไม่สำเร็จ')}}
-async function save(){toast('กำลังบันทึก…');try{const r=await api('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(S)});if(r.status===401){openLogin();return}if(!r.ok)throw 0;toast('บันทึกและเผยแพร่แล้ว ✓')}catch(e){toast('บันทึกไม่สำเร็จ')}}
+async function upload(file,cb){if(!file)return;try{toast('กำลังอัปโหลดไป ImgBB…');const b=await shrink(file);const fd=new FormData();fd.append('image',b,'image.jpg');const r=await fetch('https://api.imgbb.com/1/upload?key='+encodeURIComponent(IMGBB_API_KEY),{method:'POST',body:fd});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.error?.message||'Upload failed');cb(j.data.url);renderSite();openEd();toast('อัปโหลดแล้ว — กดบันทึกเพื่อเก็บข้อมูล')}catch(e){console.error(e);toast('อัปโหลดไม่สำเร็จ: ตรวจสอบ API Key/อินเทอร์เน็ต')}}
+async function save(){
+  try {
+    localStorage.setItem('pryvex_bio_data',JSON.stringify(S));
+    if(!SUPABASE_PUBLIC_KEY || SUPABASE_PUBLIC_KEY.startsWith('PASTE_')) {
+      toast('บันทึกในเครื่องแล้ว — ใส่ Supabase publishable/anon key เพื่อซิงก์ออนไลน์'); return;
+    }
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?on_conflict=id`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_PUBLIC_KEY,'Authorization':'Bearer '+SUPABASE_PUBLIC_KEY,'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({id:1,data:S,updated_at:new Date().toISOString()})
+    });
+    if(!r.ok) throw new Error(await r.text());
+    toast('บันทึกและซิงก์ออนไลน์แล้ว ✓');
+  } catch(e) { console.error(e); toast('ซิงก์ออนไลน์ไม่สำเร็จ — ตรวจสอบ key, ตาราง และ RLS'); }
+}
+async function loadFromSupabase(){
+  if(!SUPABASE_PUBLIC_KEY || SUPABASE_PUBLIC_KEY.startsWith('PASTE_')) return;
+  try {
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?id=eq.1&select=data&limit=1`,{
+      headers:{'apikey':SUPABASE_PUBLIC_KEY,'Authorization':'Bearer '+SUPABASE_PUBLIC_KEY}
+    });
+    if(!r.ok) throw new Error(await r.text());
+    const rows=await r.json();
+    if(rows[0]?.data && Array.isArray(rows[0].data.links)){
+      S={...S,...rows[0].data,bg:{...S.bg,...(rows[0].data.bg||{})},donate:{...S.donate,...(rows[0].data.donate||{}),methods:(Array.isArray(rows[0].data.donate?.methods)?rows[0].data.donate.methods:[]).map((m,i)=>({id:m.id||('pay'+i),enabled:m.enabled!==false,bankName:m.bankName||'',accountName:m.accountName||'',accountNumber:m.accountNumber||'',qrUrl:m.qrUrl||'',infoImageUrl:m.infoImageUrl||'',note:m.note||''}))}};
+      localStorage.setItem('pryvex_bio_data',JSON.stringify(S)); renderSite();
+    }
+  } catch(e) { console.warn('Supabase load failed:',e); }
+}
 function openLogin(){
   const a=$('adm');a.textContent='';
   const pw=h('input',{type:'password',placeholder:'รหัสผ่านแอดมิน',autocomplete:'current-password'});
-  const go=async()=>{try{const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw.value})});if(!r.ok)throw 0;setT((await r.json()).token);openEd();toast('เข้าสู่ระบบแล้ว')}catch(e){toast('รหัสไม่ถูกต้อง');pw.select()}};
+  const go=()=>{if(pw.value===ADMIN_PASSWORD){setT('ok');openEd();toast('เข้าสู่ระบบแอดมินแล้ว')}else{toast('รหัสไม่ถูกต้อง');pw.select()}};
   pw.addEventListener('keydown',e=>{if(e.key==='Enter')go()});
   const ov=h('div',{class:'ov on',onclick:e=>{if(e.target===ov)ov.remove()}},h('div',{class:'lg'},h('b',{},'เข้าสู่ระบบแอดมิน'),pw,h('button',{class:'b p',onclick:go},'เข้าสู่ระบบ')));
   a.append(ov);pw.focus();
@@ -167,22 +208,37 @@ function openEd(){
     h('div',{class:'row'},fld('สีบน',S.bg.c1,v=>S.bg.c1=v,'color'),fld('สีล่าง',S.bg.c2,v=>S.bg.c2=v,'color')),
     h('div',{class:'row'},fileBtn(S.bg.img?'เปลี่ยนรูปพื้นหลัง':'อัปโหลดรูปพื้นหลัง',u=>S.bg.img=u),
       S.bg.img?h('button',{class:'b d',onclick:()=>{S.bg.img='';re()}},'ใช้สีไล่เฉดแทน'):''),
-    h('div',{class:'sec'},'ช่องทาง Donate ('+(Array.isArray(S.donate)?S.donate.length:0)+')'));
-  if(!Array.isArray(S.donate))S.donate=[];
-  S.donate.forEach((d,i)=>{
-    if(!d.bank)d.bank=d.title||'';
-    body.append(h('div',{class:'card'},
-      fld('ชื่อธนาคาร / ช่องทาง เช่น กสิกรไทย หรือ PromptPay',d.bank,v=>{d.bank=v;d.title=v}),
-      fld('ชื่อเจ้าของบัญชี',d.account,v=>d.account=v),
-      fld('เลขบัญชี / เบอร์พร้อมเพย์',d.number,v=>d.number=v),
-      fld('URL รูป QR (ไม่จำเป็น หากอัปโหลดรูป)',d.qr,v=>d.qr=v),
-      fileBtn(d.qr?'อัปโหลด/เปลี่ยนรูป QR':'อัปโหลดรูป QR',u=>{d.qr=u}),
-      d.qr&&imgOk(d.qr)?h('img',{src:d.qr,alt:'ตัวอย่าง QR Code',style:'width:min(100%,220px);background:#fff;padding:8px;border-radius:12px;justify-self:center'}):'',
-      fld('หมายเหตุ (ไม่บังคับ)',d.note,v=>d.note=v),
-      h('button',{class:'b d',onclick:()=>{S.donate.splice(i,1);re()}},'ลบช่องทางนี้')));
-  });
-  body.append(h('button',{class:'b',onclick:()=>{S.donate.push({id:'d'+Date.now(),title:'PromptPay',bank:'PromptPay',account:'',number:'',qr:'',note:''});re();setTimeout(()=>{const d=$('adm').querySelector('.db');d.scrollTop=d.scrollHeight},30)}},'+ เพิ่มช่องทาง Donate'));
-  body.append(h('div',{class:'sec'},'ลิงก์ ('+S.links.length+')'));
+    h('div',{class:'sec'},'Donate · QR รับเงิน'),
+    h('div',{class:'card'},
+      (()=>{const t=h('input',{type:'checkbox'});t.checked=(S.donate||{}).enabled!==false;t.addEventListener('change',e=>{S.donate.enabled=e.target.checked;renderSite()});return h('label',{},t,' แสดงแท็บ Donate')})(),
+      fld('หัวข้อ Donate',S.donate.title||'',v=>{S.donate.title=v}),
+      fld('คำอธิบาย',S.donate.desc||'',v=>{S.donate.desc=v}),
+      fld('หมายเลขรับเงินหลัก (ถ้าต้องการแสดง)',S.donate.wallet||'',v=>{S.donate.wallet=v}),
+      fld('ลิงก์รับเงิน (ถ้ามี)',S.donate.paymentLink||'',v=>{S.donate.paymentLink=v}),
+      h('div',{class:'sec'},'ช่องทางสนับสนุน ('+((S.donate.methods||[]).length)+') · ลากการ์ดเพื่อเรียงลำดับ'),
+      ...((S.donate.methods||[]).map((m,i)=>{
+        const card=h('div',{class:'card method-admin-card',draggable:'true','data-method-id':m.id||String(i)});
+        const toggle=h('input',{type:'checkbox'});toggle.checked=m.enabled!==false;toggle.addEventListener('change',()=>{m.enabled=toggle.checked;renderSite()});
+        card.append(h('div',{class:'drag-handle'},h('span',{class:'grip'},'⠿'),h('span',{},'จับตรงนี้แล้วลากเพื่อจัดลำดับ')),
+          h('label',{},toggle,' แสดงช่องทางนี้บนเว็บไซต์'),
+          fld('ชื่อธนาคารหรือช่องทางรับเงิน',m.bankName||'',v=>{m.bankName=v}),
+          fld('ชื่อบัญชีผู้รับ',m.accountName||'',v=>{m.accountName=v}),
+          fld('เลขบัญชี / หมายเลขรับเงิน',m.accountNumber||'',v=>{m.accountNumber=v}),
+          fld('หมายเหตุ (ไม่บังคับ)',m.note||'',v=>{m.note=v}),
+          fld('URL รูป QR Code (HTTPS)',m.qrUrl||'',v=>{m.qrUrl=v}),
+          h('div',{class:'row'},fileBtn(m.qrUrl?'อัปโหลด/เปลี่ยน QR Code':'อัปโหลด QR Code จากเครื่อง',u=>{m.qrUrl=u}),m.qrUrl?h('button',{class:'b',onclick:()=>{m.qrUrl='';re()}},'ลบ QR'):'',
+            fileBtn(m.infoImageUrl?'อัปโหลด/เปลี่ยนรูปเพิ่มเติม':'อัปโหลดรูปเพิ่มเติม (ไม่บังคับ)',u=>{m.infoImageUrl=u}),m.infoImageUrl?h('button',{class:'b',onclick:()=>{m.infoImageUrl='';re()}},'ลบรูปเพิ่มเติม'):''),
+          h('button',{class:'b d',onclick:()=>{if(confirm('ลบช่องทาง '+(m.bankName||'นี้')+' ใช่ไหม?')){S.donate.methods.splice(i,1);re()}}},'ลบช่องทาง'));
+        card.addEventListener('dragstart',e=>{card.classList.add('dragging');if(e.dataTransfer){e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(m.id||i))}});
+        card.addEventListener('dragend',()=>{card.classList.remove('dragging');body.querySelectorAll('.method-admin-card').forEach(c=>c.classList.remove('drag-over'))});
+        card.addEventListener('dragover',e=>{e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='move';card.classList.add('drag-over')});
+        card.addEventListener('dragleave',e=>{if(!card.contains(e.relatedTarget))card.classList.remove('drag-over')});
+        card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('drag-over');const moving=body.querySelector('.method-admin-card.dragging');if(!moving||moving===card)return;const fromId=moving.getAttribute('data-method-id'),toId=card.getAttribute('data-method-id');const list=S.donate.methods;const from=list.findIndex((x,j)=>String(x.id||j)===fromId);const to=list.findIndex((x,j)=>String(x.id||j)===toId);if(from<0||to<0||from===to)return;const [item]=list.splice(from,1);list.splice(to,0,item);re();toast('จัดลำดับแล้ว อย่าลืมกดบันทึก')});
+        return card;
+      })),
+      h('button',{class:'b',onclick:()=>{S.donate.methods=S.donate.methods||[];S.donate.methods.push({id:'pay'+Date.now(),enabled:true,bankName:'ช่องทางใหม่',accountName:'',accountNumber:'',qrUrl:'',infoImageUrl:'',note:''});re();setTimeout(()=>{const d=$('adm').querySelector('.db');d.scrollTop=d.scrollHeight},30)}},'+ เพิ่มช่องทางสนับสนุน')
+    ),
+    h('div',{class:'sec'},'ลิงก์ ('+S.links.length+')'));
   S.links.forEach((l,i)=>{
     const mv=d=>()=>{const j=i+d;if(j<0||j>=S.links.length)return;[S.links[i],S.links[j]]=[S.links[j],S.links[i]];re()};
     body.append(h('div',{class:'card'},
@@ -199,7 +255,21 @@ function openEd(){
   a.append(ov);body.scrollTop=sc;
 }
 renderSite();
-fetch('/api/config').then(r=>r.ok?r.json():null).then(d=>{if(d&&Array.isArray(d.links)){S={...S,...d,bg:{...S.bg,...(d.bg||{})},donate:Array.isArray(d.donate)?d.donate:[]};renderSite()}}).catch(()=>{});
+loadFromSupabase();
+// One HTML file: ImgBB uploads work from the browser; shared online data uses Supabase REST + a public key and configured table/RLS.
+/* Supabase SQL setup (run once in SQL Editor):
+create table if not exists public.pryvex_site (
+  id integer primary key,
+  data jsonb not null,
+  updated_at timestamptz not null default now()
+);
+alter table public.pryvex_site enable row level security;
+create policy "public read Pryvex site" on public.pryvex_site for select to anon using (true);
+create policy "public write Pryvex site" on public.pryvex_site for insert to anon with check (id = 1);
+create policy "public update Pryvex site" on public.pryvex_site for update to anon using (id = 1) with check (id = 1);
+grant select, insert, update on public.pryvex_site to anon;
+WARNING: These permissive policies let anyone with the public page modify shared data. Do not use for production; use authenticated admin/server functions with restricted write access.
+*/
 </script>
 </body>
 </html>
