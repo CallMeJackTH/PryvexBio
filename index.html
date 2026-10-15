@@ -114,20 +114,6 @@ function renderSite(){
   const ava=h('div',{class:'ava',role:'button',tabindex:'0',title:'โปรไฟล์',onclick:adminOpen,onkeydown:e=>{if(e.key==='Enter')adminOpen()}},(S.name||'J').trim().charAt(0).toUpperCase());
   if(imgOk(S.avatar)){const im=h('img',{src:S.avatar,alt:'',referrerpolicy:'no-referrer'});im.onerror=()=>im.remove();ava.append(im)}
   r.append(h('section',{class:'hero'},h('div',{class:'brand'},h('span',{class:'dot'}),'Pryvex Bio'),ava,h('h1',{},S.name||'JACK_007'),h('p',{class:'bio'},S.bio||''),h('div',{class:'hint'},'เลื่อนลงเพื่อดูลิงก์ ↓')));
-  if(S.links.length){const t=()=>S.links.map(l=>h('span',{},'✦ '+l.title));r.append(h('div',{class:'mq'},h('div',{},t(),t())))}
-  const st=h('main',{class:'stack'});
-  if(!S.links.length)st.append(h('div',{class:'empty'},'ยังไม่มีลิงก์'));
-  S.links.forEach((l,i)=>{
-    const hue=(i*67+250)%360;
-    const bgc=imgOk(l.img)?`url("${l.img}") center/cover`:`linear-gradient(135deg,hsl(${hue} 70% 45%),hsl(${(hue+60)%360} 70% 25%))`;
-    const p=h('a',{class:'panel',href:safe(l.url||'#'),target:'_blank',rel:'noopener noreferrer'},
-      h('div',{class:'pimg',style:'background:'+bgc}),h('div',{class:'scrim'}),h('div',{class:'spot'}),
-      h('span',{class:'num'},String(i+1).padStart(2,'0')),
-      h('div',{class:'info'},h('div',{},h('h2',{},l.title||'ลิงก์'),h('p',{},l.desc||'')),h('span',{class:'go'},'เปิดลิงก์ →')));
-    p.addEventListener('pointermove',e=>{const q=p.getBoundingClientRect();p.style.setProperty('--mx',(e.clientX-q.left)+'px');p.style.setProperty('--my',(e.clientY-q.top)+'px')});
-    st.append(p);
-  });
-  r.append(st);
   const dn=S.donate||{};
   if(dn.enabled!==false){
     const methods=Array.isArray(dn.methods)?dn.methods:[];
@@ -142,8 +128,22 @@ function renderSite(){
       const qr=h('div',{class:'qrbox'});const qi=h('img',{src:dn.qrUrl,alt:'QR Code สำหรับโดเนท',loading:'lazy'});qr.append(qi);cards.append(h('article',{class:'donate-method'},h('h3',{},'ช่องทางรับเงิน'),qr));
     }
     if(!cards.childElementCount)cards.append(h('div',{class:'donate-method'},h('div',{class:'qrplaceholder'},'เจ้าของเว็บยังไม่ได้เพิ่มธนาคารหรือรูป QR Code')));
-    st.append(h('section',{class:'donate',id:'donate'},head,cards));
+    r.append(h('section',{class:'donate',id:'donate'},head,cards));
   }
+  if(S.links.length){const t=()=>S.links.map(l=>h('span',{},'✦ '+l.title));r.append(h('div',{class:'mq'},h('div',{},t(),t())))}
+  const st=h('main',{class:'stack'});
+  if(!S.links.length)st.append(h('div',{class:'empty'},'ยังไม่มีลิงก์'));
+  S.links.forEach((l,i)=>{
+    const hue=(i*67+250)%360;
+    const bgc=imgOk(l.img)?`url("${l.img}") center/cover`:`linear-gradient(135deg,hsl(${hue} 70% 45%),hsl(${(hue+60)%360} 70% 25%))`;
+    const p=h('a',{class:'panel',href:safe(l.url||'#'),target:'_blank',rel:'noopener noreferrer'},
+      h('div',{class:'pimg',style:'background:'+bgc}),h('div',{class:'scrim'}),h('div',{class:'spot'}),
+      h('span',{class:'num'},String(i+1).padStart(2,'0')),
+      h('div',{class:'info'},h('div',{},h('h2',{},l.title||'ลิงก์'),h('p',{},l.desc||'')),h('span',{class:'go'},'เปิดลิงก์ →')));
+    p.addEventListener('pointermove',e=>{const q=p.getBoundingClientRect();p.style.setProperty('--mx',(e.clientX-q.left)+'px');p.style.setProperty('--my',(e.clientY-q.top)+'px')});
+    st.append(p);
+  });
+  r.append(st);
   tick();
 }
 let raf=0;
@@ -162,17 +162,29 @@ async function upload(file,cb){
     const data=await r.json().catch(()=>({}));
     if(r.status===401){setT('');openLogin();return;}
     if(!r.ok||!data.url)throw new Error(data.error||'Upload failed');
-    cb(data.url);renderSite();openEd();toast('อัปโหลดแล้ว — อย่าลืมกดบันทึก');
+    cb(data.url);
+    // Persist the new hosted image URL immediately so a refresh cannot discard it.
+    const persisted=await save();
+    renderSite();openEd();
+    if(persisted)toast('อัปโหลดรูปและบันทึกออนไลน์แล้ว ✓');
+    else toast('อัปโหลดรูปแล้ว แต่บันทึกออนไลน์ไม่สำเร็จ กรุณาตรวจสอบ /api/config');
   }catch(e){console.error(e);toast('อัปโหลดไม่สำเร็จ: ตรวจสอบการเข้าสู่ระบบและ /api/upload');}
 }
-async function save(){
+let saveTimer=0;
+function queueSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>save(true),900);
+}
+async function save(silent=false){
   try{
+    // Local draft is a fallback; the server copy is the shared online source of truth.
     localStorage.setItem('pryvex_bio_data',JSON.stringify(S));
     const r=await api('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(S)});
-    if(r.status===401){setT('');openLogin();return;}
+    if(r.status===401){setT('');openLogin();return false;}
     if(!r.ok){const data=await r.json().catch(()=>({}));throw new Error(data.error||'Save failed');}
-    toast('บันทึกและเผยแพร่แล้ว ✓');
-  }catch(e){console.error(e);toast('บันทึกออนไลน์ไม่สำเร็จ: ตรวจสอบ /api/config');}
+    if(!silent)toast('บันทึกและเผยแพร่แล้ว ✓');
+    return true;
+  }catch(e){console.error(e);toast('บันทึกออนไลน์ไม่สำเร็จ: ตรวจสอบ /api/config');return false;}
 }
 async function loadConfig(){
   try{
@@ -201,7 +213,7 @@ function openLogin(){
   const ov=h('div',{class:'ov on',onclick:e=>{if(e.target===ov)ov.remove()}},h('div',{class:'lg'},h('b',{},'เข้าสู่ระบบแอดมิน'),pw,h('button',{class:'b p',onclick:go},'เข้าสู่ระบบ')));
   a.append(ov);pw.focus();
 }
-function fld(label,val,fn,type='text'){const i=h('input',{type});i.value=val||'';i.addEventListener('input',()=>{fn(i.value);renderSite()});return h('label',{},label,i)}
+function fld(label,val,fn,type='text'){const i=h('input',{type});i.value=val||'';i.addEventListener('input',()=>{fn(i.value);renderSite();queueSave()});return h('label',{},label,i)}
 function fileBtn(text,cb){const f=h('input',{type:'file',accept:'image/*',style:'display:none'});f.addEventListener('change',()=>upload(f.files[0],cb));return h('button',{class:'b',onclick:()=>f.click()},text,f)}
 function openEd(){
   const a=$('adm'),old=a.querySelector('.db'),sc=old?old.scrollTop:0;a.textContent='';
@@ -217,7 +229,7 @@ function openEd(){
       S.bg.img?h('button',{class:'b d',onclick:()=>{S.bg.img='';re()}},'ใช้สีไล่เฉดแทน'):''),
     h('div',{class:'sec'},'Donate · QR รับเงิน'),
     h('div',{class:'card'},
-      (()=>{const t=h('input',{type:'checkbox'});t.checked=(S.donate||{}).enabled!==false;t.addEventListener('change',e=>{S.donate.enabled=e.target.checked;renderSite()});return h('label',{},t,' แสดงแท็บ Donate')})(),
+      (()=>{const t=h('input',{type:'checkbox'});t.checked=(S.donate||{}).enabled!==false;t.addEventListener('change',e=>{S.donate.enabled=e.target.checked;renderSite();queueSave()});return h('label',{},t,' แสดงแท็บ Donate')})(),
       fld('หัวข้อ Donate',S.donate.title||'',v=>{S.donate.title=v}),
       fld('คำอธิบาย',S.donate.desc||'',v=>{S.donate.desc=v}),
       fld('หมายเลขรับเงินหลัก (ถ้าต้องการแสดง)',S.donate.wallet||'',v=>{S.donate.wallet=v}),
@@ -225,7 +237,7 @@ function openEd(){
       h('div',{class:'sec'},'ช่องทางสนับสนุน ('+((S.donate.methods||[]).length)+') · ลากการ์ดเพื่อเรียงลำดับ'),
       ...((S.donate.methods||[]).map((m,i)=>{
         const card=h('div',{class:'card method-admin-card',draggable:'true','data-method-id':m.id||String(i)});
-        const toggle=h('input',{type:'checkbox'});toggle.checked=m.enabled!==false;toggle.addEventListener('change',()=>{m.enabled=toggle.checked;renderSite()});
+        const toggle=h('input',{type:'checkbox'});toggle.checked=m.enabled!==false;toggle.addEventListener('change',()=>{m.enabled=toggle.checked;renderSite();queueSave()});
         card.append(h('div',{class:'drag-handle'},h('span',{class:'grip'},'⠿'),h('span',{},'จับตรงนี้แล้วลากเพื่อจัดลำดับ')),
           h('label',{},toggle,' แสดงช่องทางนี้บนเว็บไซต์'),
           fld('ชื่อธนาคารหรือช่องทางรับเงิน',m.bankName||'',v=>{m.bankName=v}),
@@ -235,12 +247,12 @@ function openEd(){
           fld('URL รูป QR Code (HTTPS)',m.qrUrl||'',v=>{m.qrUrl=v}),
           h('div',{class:'row'},fileBtn(m.qrUrl?'อัปโหลด/เปลี่ยน QR Code':'อัปโหลด QR Code จากเครื่อง',u=>{m.qrUrl=u}),m.qrUrl?h('button',{class:'b',onclick:()=>{m.qrUrl='';re()}},'ลบ QR'):'',
             fileBtn(m.infoImageUrl?'อัปโหลด/เปลี่ยนรูปเพิ่มเติม':'อัปโหลดรูปเพิ่มเติม (ไม่บังคับ)',u=>{m.infoImageUrl=u}),m.infoImageUrl?h('button',{class:'b',onclick:()=>{m.infoImageUrl='';re()}},'ลบรูปเพิ่มเติม'):''),
-          h('button',{class:'b d',onclick:()=>{if(confirm('ลบช่องทาง '+(m.bankName||'นี้')+' ใช่ไหม?')){S.donate.methods.splice(i,1);re()}}},'ลบช่องทาง'));
+          h('button',{class:'b d',onclick:()=>{if(confirm('ลบช่องทาง '+(m.bankName||'นี้')+' ใช่ไหม?')){S.donate.methods.splice(i,1);re();queueSave()}}},'ลบช่องทาง'));
         card.addEventListener('dragstart',e=>{card.classList.add('dragging');if(e.dataTransfer){e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(m.id||i))}});
         card.addEventListener('dragend',()=>{card.classList.remove('dragging');body.querySelectorAll('.method-admin-card').forEach(c=>c.classList.remove('drag-over'))});
         card.addEventListener('dragover',e=>{e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='move';card.classList.add('drag-over')});
         card.addEventListener('dragleave',e=>{if(!card.contains(e.relatedTarget))card.classList.remove('drag-over')});
-        card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('drag-over');const moving=body.querySelector('.method-admin-card.dragging');if(!moving||moving===card)return;const fromId=moving.getAttribute('data-method-id'),toId=card.getAttribute('data-method-id');const list=S.donate.methods;const from=list.findIndex((x,j)=>String(x.id||j)===fromId);const to=list.findIndex((x,j)=>String(x.id||j)===toId);if(from<0||to<0||from===to)return;const [item]=list.splice(from,1);list.splice(to,0,item);re();toast('จัดลำดับแล้ว อย่าลืมกดบันทึก')});
+        card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('drag-over');const moving=body.querySelector('.method-admin-card.dragging');if(!moving||moving===card)return;const fromId=moving.getAttribute('data-method-id'),toId=card.getAttribute('data-method-id');const list=S.donate.methods;const from=list.findIndex((x,j)=>String(x.id||j)===fromId);const to=list.findIndex((x,j)=>String(x.id||j)===toId);if(from<0||to<0||from===to)return;const [item]=list.splice(from,1);list.splice(to,0,item);re();queueSave();toast('จัดลำดับช่องทางแล้ว กำลังบันทึกออนไลน์')});
         // Touch/pointer fallback: drag from the handle on phones where native HTML drag is unavailable.
         const handle=card.querySelector('.drag-handle');
         let pointerDragging=false;
@@ -271,12 +283,12 @@ function openEd(){
           const to=list.findIndex((x,j)=>String(x.id||j)===toId);
           if(from<0||to<0||from===to)return;
           const [item]=list.splice(from,1);list.splice(to,0,item);
-          re();toast('จัดลำดับแล้ว อย่าลืมกดบันทึก');
+          re();queueSave();toast('จัดลำดับช่องทางแล้ว กำลังบันทึกออนไลน์');
         });
         handle.addEventListener('pointercancel',()=>{pointerDragging=false;card.classList.remove('dragging');body.querySelectorAll('.method-admin-card').forEach(c=>c.classList.remove('drag-over'))});
         return card;
       })),
-      h('button',{class:'b',onclick:()=>{S.donate.methods=S.donate.methods||[];S.donate.methods.push({id:'pay'+Date.now(),enabled:true,bankName:'ช่องทางใหม่',accountName:'',accountNumber:'',qrUrl:'',infoImageUrl:'',note:''});re();setTimeout(()=>{const d=$('adm').querySelector('.db');d.scrollTop=d.scrollHeight},30)}},'+ เพิ่มช่องทางสนับสนุน')
+      h('button',{class:'b',onclick:()=>{S.donate.methods=S.donate.methods||[];S.donate.methods.push({id:'pay'+Date.now(),enabled:true,bankName:'ช่องทางใหม่',accountName:'',accountNumber:'',qrUrl:'',infoImageUrl:'',note:''});re();queueSave();setTimeout(()=>{const d=$('adm').querySelector('.db');d.scrollTop=d.scrollHeight},30)}},'+ เพิ่มช่องทางสนับสนุน')
     ),
     h('div',{class:'sec'},'ลิงก์ ('+S.links.length+')'));
   S.links.forEach((l,i)=>{
