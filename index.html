@@ -234,6 +234,39 @@ function openEd(){
         card.addEventListener('dragover',e=>{e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='move';card.classList.add('drag-over')});
         card.addEventListener('dragleave',e=>{if(!card.contains(e.relatedTarget))card.classList.remove('drag-over')});
         card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('drag-over');const moving=body.querySelector('.method-admin-card.dragging');if(!moving||moving===card)return;const fromId=moving.getAttribute('data-method-id'),toId=card.getAttribute('data-method-id');const list=S.donate.methods;const from=list.findIndex((x,j)=>String(x.id||j)===fromId);const to=list.findIndex((x,j)=>String(x.id||j)===toId);if(from<0||to<0||from===to)return;const [item]=list.splice(from,1);list.splice(to,0,item);re();toast('จัดลำดับแล้ว อย่าลืมกดบันทึก')});
+        // Touch/pointer fallback: drag from the handle on phones where native HTML drag is unavailable.
+        const handle=card.querySelector('.drag-handle');
+        let pointerDragging=false;
+        handle.style.touchAction='none';
+        handle.addEventListener('pointerdown',e=>{
+          if(e.pointerType==='mouse')return;
+          pointerDragging=true;
+          card.classList.add('dragging');
+          try{handle.setPointerCapture(e.pointerId)}catch(_e){}
+          e.preventDefault();
+        });
+        handle.addEventListener('pointermove',e=>{
+          if(!pointerDragging)return;
+          const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.method-admin-card');
+          body.querySelectorAll('.method-admin-card').forEach(c=>c.classList.toggle('drag-over',!!target&&c===target&&c!==card));
+          e.preventDefault();
+        });
+        handle.addEventListener('pointerup',e=>{
+          if(!pointerDragging)return;
+          pointerDragging=false;
+          card.classList.remove('dragging');
+          const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.method-admin-card');
+          body.querySelectorAll('.method-admin-card').forEach(c=>c.classList.remove('drag-over'));
+          if(!target||target===card)return;
+          const fromId=card.getAttribute('data-method-id'),toId=target.getAttribute('data-method-id');
+          const list=S.donate.methods;
+          const from=list.findIndex((x,j)=>String(x.id||j)===fromId);
+          const to=list.findIndex((x,j)=>String(x.id||j)===toId);
+          if(from<0||to<0||from===to)return;
+          const [item]=list.splice(from,1);list.splice(to,0,item);
+          re();toast('จัดลำดับแล้ว อย่าลืมกดบันทึก');
+        });
+        handle.addEventListener('pointercancel',()=>{pointerDragging=false;card.classList.remove('dragging');body.querySelectorAll('.method-admin-card').forEach(c=>c.classList.remove('drag-over'))});
         return card;
       })),
       h('button',{class:'b',onclick:()=>{S.donate.methods=S.donate.methods||[];S.donate.methods.push({id:'pay'+Date.now(),enabled:true,bankName:'ช่องทางใหม่',accountName:'',accountNumber:'',qrUrl:'',infoImageUrl:'',note:''});re();setTimeout(()=>{const d=$('adm').querySelector('.db');d.scrollTop=d.scrollHeight},30)}},'+ เพิ่มช่องทางสนับสนุน')
